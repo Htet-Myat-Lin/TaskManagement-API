@@ -19,7 +19,7 @@ export const createMember = async (req: Request, res: Response, next: NextFuncti
     const file = req.file as Express.Multer.File | undefined
     try {
         if (file) {
-            req.body.profileImage = `${process.env.IMAGES_PATH}${file.fieldname}`
+            req.body.profileImage = `${process.env.IMAGES_PATH}${file.filename}`
         }
         const member = await createMemberService(req.body)
         sendSuccessResponse(res, 201, { member }, "Member created successfully")
@@ -60,7 +60,7 @@ export const editMember = async (req: Request, res: Response, next: NextFunction
         const member = await MemberRepository.findById(memberId as string)
         if (!member) throw new AppError(404, "Member not found")
         if (file) {
-            req.body.profileImage = `${process.env.IMAGES_PATH}${file.fieldname}`
+            req.body.profileImage = `${process.env.IMAGES_PATH}${file.filename}`
 
             // Delete old image if editing member with new profile image
             if (member.profileImage) {

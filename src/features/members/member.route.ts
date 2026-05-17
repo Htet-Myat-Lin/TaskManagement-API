@@ -10,10 +10,10 @@ router.route("/")
     .post(upload.single("profileImage"), validate(createMemberSchema), createMember)
     .get(getMembers)
 
+router.delete("/bulk-delete", bulkDeleteMembers)
+
 router.route("/:id")
     .patch(upload.single("profileImage"), validate(createMemberSchema), editMember)
     .delete(deleteMember)
-
-router.delete("/bulk-delete", bulkDeleteMembers)
 
 export { router as memberRouter }

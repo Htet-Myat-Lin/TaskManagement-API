@@ -9,13 +9,14 @@ router.route("/")
     .get(getTasks)
     .post(validate(createTaskSchema), createTask)
 
+router.delete("/bulk-delete", bulkDeleteTasks)
+router.patch("/bulk-status-update", bulkStatusUpdate)
+
 router.route("/:id")
     .patch(validate(createTaskSchema), editTask)
     .delete(deleteTask)
 
-router.delete("/bulk-delete", bulkDeleteTasks)
-router.patch("/bulk-status-update", bulkStatusUpdate)
 router.get("/status-count", getTaskCountByStatus)
-router.get("/:status", getTasksByStatus)
+router.get("/status/:status", getTasksByStatus)
 
 export { router as taskRouter }

@@ -8,7 +8,7 @@ const storage = diskStorage({
         cb(null, "src/uploads")
     },
     filename: (req, file, cb) => {
-        const fileName = `${Date.now()}-${path.extname(file.originalname)}`
+        const fileName = `${Date.now()}${path.extname(file.originalname)}`
         cb(null, fileName)
     }
 })

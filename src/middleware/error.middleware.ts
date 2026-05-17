@@ -19,11 +19,9 @@ export const globalErrorHandler = (err: any, req: Request, res: Response, next: 
 
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
         if (err.code === "P2002") {
-            const fields =
-                (err.meta as any)?.target ||
-                (err.meta as any)?.driverAdapterError?.cause?.constraint?.fields;
+            const fields = (err.meta as any)?.driverAdapterError?.cause?.originalMessage
 
-            const fieldName = fields?.join(", ") || "field";
+            const fieldName = fields?.split("_")[1] || "field";
             return res.status(400).json({
                 status: "error",
                 message: `${fieldName} already exists.`

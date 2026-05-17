@@ -16,7 +16,7 @@ app.use(express.static("public"))
 app.use(morgan("dev"))
 app.use(cors({ origin: "http://localhost:7000" }))
 
-app.use("/uploads", express.static("uploads"))
+app.use("/uploads", express.static("src/uploads"))
 app.use("/api/v1/members", memberRouter)
 app.use("/api/v1/tasks", taskRouter)
 

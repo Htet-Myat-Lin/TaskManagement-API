@@ -6,7 +6,7 @@ import { Status } from "../../../generated/prisma/enums";
 
 export interface TaskFilters {
     status?: Status;
-    name?: string;
+    title?: string;
     description?: string;
     page: number;
     limit: number;
@@ -38,7 +38,7 @@ export const getTasks = async (req: Request, res: Response, next: NextFunction):
     try {
         const filters: TaskFilters = {
             status: req.query.status as Status,
-            name: req.query.name as string,
+            title: req.query.title as string,
             page: parseInt(req.query.page as string) || 1,
             limit: parseInt(req.query.limit as string) || 10,
             sortBy: req.query.sortBy as string
@@ -80,7 +80,7 @@ export const getTasksByStatus = async (req: Request, res: Response, next: NextFu
 
     const filters: TaskFilters = {
         status: status as Status,
-        name: req.query.name as string,
+        title: req.query.title as string,
         page: parseInt(req.query.page as string) || 1,
         limit: parseInt(req.query.limit as string) || 10,
         sortBy: req.query.sortBy as string

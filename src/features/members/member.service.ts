@@ -3,6 +3,7 @@ import { AppError } from "../../utils/app.error";
 import { MemberFilters } from "./member.controller";
 import { MemberRepository } from "./member.repository";
 import { CreateMemberType } from "./member.validate";
+import fs from "node:fs"
 
 export const createMemberService = async (data: CreateMemberType) : Promise<Member> => {
     return await MemberRepository.create(data)
@@ -15,10 +16,10 @@ export const editMemberService = async (id: string, data: CreateMemberType) : Pr
 export const getMembersService = async (filters: MemberFilters) : Promise<{ memberList: Member[], totalMemberCount: number }> => {
     let whereClause: any = {}
     if (filters.name) {
-        whereClause.name = { contains: filters.name, mode: "insensitive" }
+        whereClause.name = { contains: filters.name }
     }
     if (filters.email) {
-        whereClause.email = { contains: filters.email, mode: "insensitive" }
+        whereClause.email = { contains: filters.email }
     }
     if (filters.createdFrom || filters.createdTo) {
         whereClause.createdAt = {}
@@ -49,6 +50,15 @@ export const deleteMemberService = async (id: string) : Promise<{ message: strin
         throw new AppError(404, "Member not found")
     }
     await MemberRepository.delete(id)
+
+    // delete existing image 
+    if (member.profileImage) {
+        const oldImagePath = member.profileImage.replace(process.env.IMAGES_PATH as string, "src/uploads/")
+        if (fs.existsSync(oldImagePath)) {
+            fs.unlinkSync(oldImagePath)
+        }
+    }
+
     return { message: "Member deleted successfully" }
 }
 
@@ -58,5 +68,16 @@ export const bulkDeleteMembersService = async (ids: string[]) : Promise<{ messag
         throw new AppError(404, "One or more members not found")
     }
     await MemberRepository.bulkDelete(ids)
+
+    members.forEach(member => {
+        // delete existing image 
+        if (member.profileImage) {
+            const oldImagePath = member.profileImage.replace(process.env.IMAGES_PATH as string, "src/uploads/")
+            if (fs.existsSync(oldImagePath)) {
+                fs.unlinkSync(oldImagePath)
+            }
+        }
+    })
+
     return { message: "Members deleted successfully" }
 }
